@@ -496,12 +496,13 @@
     }
 
     function parseInput(value) {
+        const normalizedValue = value.replace(/[“”]/g, '"').replace(/[‘’]/g, "'");
         let parsed;
         try {
-            parsed = JSON.parse(value);
+            parsed = JSON.parse(normalizedValue);
         } catch {
             try {
-                parsed = JSON.parse(value.replace(/([{,])\s*(en|ru)\s*:/g, '$1"$2":'));
+                parsed = JSON.parse(normalizedValue.replace(/([{,])\s*(en|ru)\s*:/g, '$1"$2":'));
             } catch {
                 throw new Error('Не получилось прочитать JSON. Проверь скобки и кавычки.');
             }
