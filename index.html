@@ -1,0 +1,458 @@
+<!doctype html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="theme-color" content="#111318">
+    <title>English Trainer</title>
+    <script>
+        if (new URLSearchParams(window.location.search).get('page') === 'knowledge') {
+            document.documentElement.classList.add('initial-knowledge');
+        }
+    </script>
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/choices.js/public/assets/styles/choices.min.css">
+    <link rel="stylesheet" href="styles.css">
+</head>
+<body class="is-loading">
+    <div class="app-loader" id="app-loader" role="status" aria-label="Загрузка приложения">
+        <span class="app-loader__mark">EN</span>
+        <span class="app-loader__line"><i></i></span>
+    </div>
+    <main class="app-shell">
+        <div class="app-topbar">
+        <header class="app-header">
+            <div>
+                <p class="eyebrow">ENGLISH TRAINER</p>
+            </div>
+            <div class="progress" id="top-progress" aria-label="Прогресс" hidden>
+                <span class="progress__current" id="progress-current">0</span>
+                <span class="progress__divider">/</span>
+                <span id="progress-total">0</span>
+            </div>
+        </header>
+
+        <nav class="app-nav" aria-label="Основная навигация">
+            <button class="app-nav__item app-nav__item--active" id="practice-nav" type="button" aria-current="page">Практика</button>
+            <button class="app-nav__item" id="knowledge-nav" type="button">Знания</button>
+        </nav>
+        </div>
+
+        <div class="page" id="practice-page">
+
+        <section class="prompt-panel" id="prompt-panel" aria-labelledby="prompt-title">
+            <div class="prompt-panel__heading">
+                <div>
+                    <p class="section-heading__kicker">PROMPT BUILDER</p>
+                    <h2 class="section-heading__title" id="prompt-title">Настройки генерации</h2>
+                </div>
+                <span class="status-dot">скопируется в clipboard</span>
+            </div>
+            <div class="prompt-form">
+                <label class="prompt-field prompt-field--wide">
+                    <span class="prompt-field__label">Времена и конструкции <small>можно выбрать несколько</small></span>
+                    <select class="prompt-field__input prompt-field__select" id="prompt-topics" multiple size="6">
+                        <option value="все 12 времён (Simple, Continuous, Perfect, Perfect Continuous)" selected>Все 12 времён</option>
+                        <option value="Present Simple">Present Simple</option>
+                        <option value="Present Continuous">Present Continuous</option>
+                        <option value="Present Perfect">Present Perfect</option>
+                        <option value="Present Perfect Continuous">Present Perfect Continuous</option>
+                        <option value="Past Simple">Past Simple</option>
+                        <option value="Past Continuous">Past Continuous</option>
+                        <option value="Past Perfect">Past Perfect</option>
+                        <option value="Past Perfect Continuous">Past Perfect Continuous</option>
+                        <option value="Future Simple">Future Simple</option>
+                        <option value="Future Continuous">Future Continuous</option>
+                        <option value="Future Perfect">Future Perfect</option>
+                        <option value="Future Perfect Continuous">Future Perfect Continuous</option>
+                        <option value="used to / be used to / get used to">used to / be used to / get used to</option>
+                        <option value="be going to" disabled>be going to</option>
+                        <option value="there is / there are" disabled>there is / there are</option>
+                        <option value="modal verbs" disabled>Modal verbs</option>
+                        <option value="conditionals" disabled>Conditionals</option>
+                        <option value="comparatives and superlatives" disabled>Comparatives and superlatives</option>
+                        <option value="articles" disabled>Articles</option>
+                        <option value="prepositions" disabled>Prepositions</option>
+                    </select>
+                </label>
+                <label class="prompt-field prompt-field--wide">
+                    <span class="prompt-field__label">Темы <small>можно выбрать несколько</small></span>
+                    <select class="prompt-field__input prompt-field__select" id="prompt-themes" multiple size="5">
+                        <option value="все темы" selected>Все</option>
+                        <option value="повседневная жизнь">Повседневная жизнь</option>
+                        <option value="работа и карьера">Работа и карьера</option>
+                        <option value="работа в IT">Работа в IT</option>
+                        <option value="программирование и разработка">Программирование и разработка</option>
+                        <option value="продукт и дизайн">Продукт и дизайн</option>
+                        <option value="IT-проекты и дедлайны">IT-проекты и дедлайны</option>
+                        <option value="технические собеседования">Технические собеседования</option>
+                        <option value="офис и рабочие встречи">Офис и рабочие встречи</option>
+                        <option value="карьера и поиск работы">Карьера и поиск работы</option>
+                        <option value="бизнес и переговоры">Бизнес и переговоры</option>
+                        <option value="семья и отношения">Семья и отношения</option>
+                        <option value="друзья и социальная жизнь">Друзья и социальная жизнь</option>
+                        <option value="знакомства и свидания">Знакомства и свидания</option>
+                        <option value="учёба и образование">Учёба и образование</option>
+                        <option value="изучение английского">Изучение английского</option>
+                        <option value="экзамены и домашние задания">Экзамены и домашние задания</option>
+                        <option value="путешествия и транспорт">Путешествия и транспорт</option>
+                        <option value="аэропорт и самолёты">Аэропорт и самолёты</option>
+                        <option value="отель и бронирование">Отель и бронирование</option>
+                        <option value="ресторан и кафе">Ресторан и кафе</option>
+                        <option value="общественный транспорт">Общественный транспорт</option>
+                        <option value="еда и готовка">Еда и готовка</option>
+                        <option value="продукты и супермаркет">Продукты и супермаркет</option>
+                        <option value="рестораны и заказ еды">Рестораны и заказ еды</option>
+                        <option value="здоровье и спорт">Здоровье и спорт</option>
+                        <option value="врач и медицинская помощь">Врач и медицинская помощь</option>
+                        <option value="спорт и тренировки">Спорт и тренировки</option>
+                        <option value="сон и привычки">Сон и привычки</option>
+                        <option value="дом и быт">Дом и быт</option>
+                        <option value="ремонт и домашние дела">Ремонт и домашние дела</option>
+                        <option value="аренда и соседи">Аренда и соседи</option>
+                        <option value="хобби и свободное время">Хобби и свободное время</option>
+                        <option value="кино, музыка и книги">Кино, музыка и книги</option>
+                        <option value="игры и развлечения">Игры и развлечения</option>
+                        <option value="покупки и деньги">Покупки и деньги</option>
+                        <option value="банк и личные финансы">Банк и личные финансы</option>
+                        <option value="одежда и магазины">Одежда и магазины</option>
+                        <option value="город и места">Город и места</option>
+                        <option value="сервисы и учреждения">Сервисы и учреждения</option>
+                        <option value="вождение и автомобиль">Вождение и автомобиль</option>
+                        <option value="технологии и интернет">Технологии и интернет</option>
+                        <option value="гаджеты и приложения">Гаджеты и приложения</option>
+                        <option value="социальные сети">Социальные сети</option>
+                        <option value="природа и погода">Природа и погода</option>
+                        <option value="праздники и события">Праздники и события</option>
+                    </select>
+                </label>
+                <label class="prompt-field prompt-field--wide">
+                    <span class="prompt-field__label">Типы предложений <small>можно выбрать несколько</small></span>
+                    <select class="prompt-field__input prompt-field__select" id="prompt-types" multiple size="3">
+                        <option value="утверждения" selected>Утверждения</option>
+                        <option value="отрицания" selected>Отрицания</option>
+                        <option value="вопросы" selected>Вопросы</option>
+                    </select>
+                </label>
+                <label class="prompt-field">
+                    <span class="prompt-field__label">Уровень</span>
+                    <select class="prompt-field__input" id="prompt-level">
+                        <option value="лёгкий">Лёгкий</option>
+                        <option value="средний">Средний</option>
+                        <option value="продвинутый">Продвинутый</option>
+                    </select>
+                </label>
+                <label class="prompt-field">
+                    <span class="prompt-field__label">Количество предложений <small>максимум 250</small></span>
+                    <input class="prompt-field__input" id="prompt-count" type="number" min="1" max="250" step="1" value="100" inputmode="numeric">
+                </label>
+                <label class="shuffle-toggle prompt-field__checkbox">
+                    <input class="shuffle-toggle__input" id="prompt-repeat" type="checkbox">
+                    <span class="shuffle-toggle__box" aria-hidden="true"></span>
+                    <span>Повторная генерация в чате</span>
+                </label>
+            </div>
+            <div class="prompt-panel__footer">
+                <p class="hint" id="prompt-status" aria-live="polite">ИИ получит готовую инструкцию для этого тренажёра.</p>
+                <button class="button button--primary" id="generate-prompt-button" type="button">Сгенерировать промпт <span>↗</span></button>
+            </div>
+        </section>
+
+        <section class="setup-panel" id="setup-panel" aria-labelledby="setup-title">
+            <div class="section-heading">
+                <div>
+                    <p class="section-heading__kicker">01 / SET</p>
+                    <h2 class="section-heading__title" id="setup-title">Загрузи свои предложения</h2>
+                </div>
+                <span class="status-dot">готово к работе</span>
+            </div>
+            <label class="visually-hidden" for="json-input">JSON с предложениями</label>
+            <textarea class="json-input" id="json-input" spellcheck="false" placeholder='[
+  {
+    "en": {
+      "main": "I visited my grandmother last weekend.",
+      "alternative": "I went to see my grandmother last weekend."
+    },
+    "ru": "Я навещал бабушку в прошлые выходные."
+  }
+]'></textarea>
+            <div class="setup-panel__footer">
+                <p class="hint">Вставь массив объектов с ключами <code>en</code> и <code>ru</code>.</p>
+                <div class="setup-panel__actions">
+                    <label class="shuffle-toggle">
+                        <input class="shuffle-toggle__input" id="shuffle-input" type="checkbox">
+                        <span class="shuffle-toggle__box" aria-hidden="true"></span>
+                        <span>Размешать</span>
+                    </label>
+                    <label class="auto-toggle">
+                        <input class="shuffle-toggle__input" id="auto-input" type="checkbox">
+                        <span class="shuffle-toggle__box" aria-hidden="true"></span>
+                        <span>Авто</span>
+                    </label>
+                    <label class="auto-toggle">
+                        <input class="shuffle-toggle__input" id="speech-input" type="checkbox">
+                        <span class="shuffle-toggle__box" aria-hidden="true"></span>
+                        <span>Озвучивать</span>
+                    </label>
+                    <label class="voice-field">
+                        <span class="visually-hidden">Голос</span>
+                        <select id="voice-select" aria-label="Английский голос">
+                            <option value="">English voice</option>
+                        </select>
+                    </label>
+                    <label class="speed-field" id="speed-field">
+                        <span class="speed-field__label">Скорость</span>
+                        <span class="speed-field__scale"><small>Очень быстро</small><small>Долго</small></span>
+                        <input class="speed-field__range" id="auto-speed" type="range" min="1" max="10" step="1" value="5" aria-label="Скорость автопоказа карточек">
+                    </label>
+                    <button class="button button--primary" id="start-button" type="button">Начать тренировку <span>→</span></button>
+                </div>
+            </div>
+            <p class="error-message" id="error-message" role="alert" hidden></p>
+        </section>
+
+        <section class="trainer" id="trainer" aria-labelledby="sentence-title" hidden>
+            <div class="trainer__meta">
+                <div class="trainer__practice-options">
+                    <label class="auto-toggle"><input class="shuffle-toggle__input" id="trainer-auto-input" type="checkbox"><span class="shuffle-toggle__box" aria-hidden="true"></span><span>Авто</span></label>
+                    <label class="auto-toggle"><input class="shuffle-toggle__input" id="trainer-speech-input" type="checkbox"><span class="shuffle-toggle__box" aria-hidden="true"></span><span>Озвучивать</span></label>
+                    <select class="trainer__voice-select" id="trainer-voice-select" aria-label="Английский голос"><option value="">Голос</option></select>
+                    <label class="trainer__speed-control"><span>Скорость</span><input id="trainer-auto-speed" type="range" min="1" max="10" step="1" value="5" aria-label="Скорость автопоказа"></label>
+                    <label class="volume-field volume-field--trainer">
+                        <span>Громкость</span>
+                        <input id="speech-volume" type="range" min="0" max="1" step="0.05" value="0.2" aria-label="Громкость озвучки">
+                    </label>
+                </div>
+                <div class="trainer__meta-actions">
+                    <button class="button button--ghost" id="pause-training-button" type="button" aria-pressed="false">Пауза</button>
+                    <button class="button button--ghost" id="exit-training-button" type="button">Выйти</button>
+                    <button class="button button--ghost" id="reset-button" type="button">Новый набор <span>↗</span></button>
+                </div>
+            </div>
+            <article class="sentence-card">
+                <span class="sentence-card__number" id="sentence-number">01</span>
+                <div class="sentence-card__progress" id="sentence-progress" hidden>
+                    <span class="sentence-card__progress-fill" id="sentence-progress-fill"></span>
+                </div>
+                <h2 class="sentence-card__prompt" id="sentence-title"></h2>
+                <p class="sentence-card__answer" id="translation" hidden></p>
+                <div class="sentence-card__line"></div>
+                <p class="sentence-card__instruction" id="instruction">Нажми <kbd>→</kbd>, чтобы проверить перевод</p>
+            </article>
+            <div class="trainer__controls">
+                <button class="button button--secondary" id="previous-button" type="button" aria-label="Предыдущее предложение">← Назад</button>
+                <button class="button button--primary button--next" id="next-button" type="button"><span id="next-label">Показать перевод</span> <span>→</span></button>
+            </div>
+        </section>
+
+        <footer class="app-footer">
+            <span><kbd>→</kbd> показать / дальше</span>
+            <span><kbd>←</kbd> назад</span>
+        </footer>
+        </div>
+
+        <section class="page knowledge-page" id="knowledge-page" aria-labelledby="knowledge-title" hidden>
+            <div class="knowledge-page__heading">
+                <div>
+                    <p class="section-heading__kicker">KNOWLEDGE / NOTES</p>
+                    <h2 class="section-heading__title" id="knowledge-title">Конспекты</h2>
+                </div>
+                <span class="status-dot">12 тем</span>
+            </div>
+            <div class="knowledge-layout">
+                <nav class="notes-nav" aria-label="Список конспектов">
+                    <p class="notes-nav__label">Simple</p>
+                    <button class="notes-nav__item notes-nav__item--active" type="button" data-note="present-simple" aria-current="page">Present Simple <span>01</span></button>
+                    <button class="notes-nav__item" type="button" data-note="past-simple">Past Simple <span>02</span></button>
+                    <button class="notes-nav__item" type="button" data-note="future-simple">Future Simple <span>03</span></button>
+                    <p class="notes-nav__label notes-nav__label--group">Continuous</p>
+                    <button class="notes-nav__item" type="button" data-note="present-continuous">Present Continuous <span>04</span></button>
+                    <button class="notes-nav__item" type="button" data-note="past-continuous">Past Continuous <span>05</span></button>
+                    <button class="notes-nav__item" type="button" data-note="future-continuous">Future Continuous <span>06</span></button>
+                    <p class="notes-nav__label notes-nav__label--group">Perfect</p>
+                    <button class="notes-nav__item" type="button" data-note="present-perfect">Present Perfect <span>07</span></button>
+                    <button class="notes-nav__item" type="button" data-note="past-perfect">Past Perfect <span>08</span></button>
+                    <button class="notes-nav__item" type="button" data-note="future-perfect">Future Perfect <span>09</span></button>
+                    <p class="notes-nav__label notes-nav__label--group">Perfect Continuous</p>
+                    <button class="notes-nav__item" type="button" data-note="present-perfect-continuous">Present Perfect Continuous <span>10</span></button>
+                    <button class="notes-nav__item" type="button" data-note="past-perfect-continuous">Past Perfect Continuous <span>11</span></button>
+                    <button class="notes-nav__item" type="button" data-note="future-perfect-continuous">Future Perfect Continuous <span>12</span></button>
+                </nav>
+                <article class="note" data-note-content="present-simple">
+                    <p class="note__kicker">01 / PRESENT</p>
+                    <h3 class="note__title">Present Simple</h3>
+                    <p class="note__lead">Регулярные действия, факты и состояния, которые происходят обычно или являются постоянными.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> это то, что происходит обычно. <i>I drink tea every morning.</i> — Я пью чай каждое утро.</p>
+                    <div class="note__text"><p>Present Simple не обозначает действие в момент речи. Он описывает регулярные действия, привычки, факты, состояния и постоянные ситуации. Расписания и общие правила также обычно формулируются в этом времени.</p><p>В третьем лице единственного числа используется окончание: <b>work → works</b>, <b>watch → watches</b>, <b>study → studies</b>. С глаголами <b>have</b> и <b>be</b> формы особые: <b>has</b>, <b>am / is / are</b>.</p><p><b>Важно:</b> в третьем лице нужна форма <i>He works</i>, а после <b>does</b> используется начальная форма: <i>Does he work?</i> Present Simple описывает обычную ситуацию, а Present Continuous — временный процесс: <i>I work from home</i> — обычная ситуация, <i>I am working from home this week</i> — временная.</p></div>
+                    <div class="note__grid">
+                        <section class="note-block"><h4>Утверждение</h4><p class="formula">I / you / we / they <b>work</b><br>he / she / it <b>works</b></p><p>Для <b>he, she, it</b> обычно добавляем <b>-s</b>.</p></section>
+                        <section class="note-block"><h4>Отрицание</h4><p class="formula">I / you / we / they <b>do not work</b><br>he / she / it <b>does not work</b></p><p>После <b>does</b> смысловой глагол возвращается в начальную форму.</p></section>
+                        <section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Do</b> you work?<br><b>Does</b> she work?</p><p>В вопросе вспомогательный глагол стоит перед подлежащим.</p></section>
+                        <section class="note-block"><h4>Когда используем</h4><p>Привычки, расписания, факты, постоянные состояния, инструкции и комментарии.</p></section>
+                        <section class="note-block"><h4>Маркеры</h4><p>always, usually, often, sometimes, rarely, never, every day, on Mondays</p></section>
+                    </div>
+                    <div class="note-example"><span>Examples</span><p>She usually works from home, but she does not work on Fridays.</p><p class="note-example__translation">Она обычно работает из дома, но по пятницам не работает.</p><p>Water boils at 100°C.</p><p class="note-example__translation">Вода кипит при 100°C.</p><p>Does your brother speak English?</p><p class="note-example__translation">Твой брат говорит по-английски?</p></div>
+                </article>
+                <article class="note" data-note-content="past-simple" hidden>
+                    <p class="note__kicker">02 / PAST</p>
+                    <h3 class="note__title">Past Simple</h3>
+                    <p class="note__lead">Завершённые действия и события в прошлом, когда время понятно из контекста или названо.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> действие было и закончилось. <i>I watched a film yesterday.</i> — Я смотрел фильм вчера.</p>
+                    <div class="note__text"><p>Past Simple показывает, что событие произошло и закончилось в прошлом. Важно не то, сколько оно длилось, а сам факт завершения. Часто события идут одно за другим и образуют историю: <i>I opened the door, walked inside and turned on the light.</i></p><p>У правильных глаголов добавляется <b>-ed</b>, но произношение окончания бывает разным: <b>worked</b> /t/, <b>played</b> /d/, <b>wanted</b> /ɪd/. Неправильные формы нужно учить отдельно: <b>go → went</b>, <b>see → saw</b>, <b>buy → bought</b>.</p><p><b>Важно:</b> в отрицаниях и вопросах прошедшее время переносится во вспомогательный <b>did</b>: <i>Did you go?</i>, не <i>Did you went?</i> Past Simple описывает последовательность завершённых событий, а Past Continuous — процесс в конкретный момент прошлого.</p></div>
+                    <div class="note__grid">
+                        <section class="note-block"><h4>Утверждение</h4><p class="formula">I / you / he / she <b>worked</b><br>She <b>went</b> home.</p><p>Правильные глаголы получают <b>-ed</b>, неправильные нужно запомнить.</p></section>
+                        <section class="note-block"><h4>Отрицание</h4><p class="formula">I / you / he / she <b>did not work</b></p><p>После <b>did</b> всегда используется начальная форма глагола.</p></section>
+                        <section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Did</b> you work?<br><b>Did</b> she go home?</p><p>Смысловой глагол не меняется после <b>did</b>.</p></section>
+                        <section class="note-block"><h4>Когда используем</h4><p>Завершённое событие, цепочка событий, факт биографии или прошлое состояние.</p></section>
+                        <section class="note-block"><h4>Маркеры</h4><p>yesterday, last week, ago, in 2020, when I was young, the other day</p></section>
+                    </div>
+                    <div class="note-example"><span>Examples</span><p>We visited our friends last weekend, but they did not visit us.</p><p class="note-example__translation">Мы навестили друзей в прошлые выходные, но они нас не навестили.</p><p>She opened the window, looked outside and smiled.</p><p class="note-example__translation">Она открыла окно, посмотрела наружу и улыбнулась.</p><p>Did you enjoy the concert?</p><p class="note-example__translation">Тебе понравился концерт?</p></div>
+                </article>
+                <article class="note" data-note-content="future-simple" hidden>
+                    <p class="note__kicker">03 / FUTURE</p>
+                    <h3 class="note__title">Future Simple</h3>
+                    <p class="note__lead">Решения, обещания, прогнозы и события, которые произойдут в будущем.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> мы говорим, что сделаем потом. <i>I will call you tonight.</i> — Я позвоню тебе сегодня вечером.</p>
+                    <div class="note__text"><p>Future Simple строится с помощью <b>will</b>. Он обозначает решение, принятое в момент разговора, обещание, предложение помощи или прогноз без очевидных доказательств.</p><p>Для заранее запланированного личного намерения часто подходит <b>be going to</b>, а для фиксированного расписания — Present Simple. Для простого сообщения о будущем действии или предположения обычно используется <b>will</b>.</p><p>Разница между конструкциями: <i>I will call him</i> — решение или обещание в момент речи; <i>I am going to call him</i> — заранее принятое намерение; <i>I am calling him at six</i> — договорённость. В придаточных времени после <b>when, if, as soon as</b> обычно используется Present Simple: <i>When I finish, I will call you.</i></p></div>
+                    <div class="note__grid">
+                        <section class="note-block"><h4>Утверждение</h4><p class="formula">I / you / he / she <b>will work</b></p><p><b>Will</b> одинаков для всех лиц и ставится перед глаголом.</p></section>
+                        <section class="note-block"><h4>Отрицание</h4><p class="formula">I / you / he / she <b>will not work</b><br>Кратко: <b>won't work</b></p><p>После <b>will</b> используется начальная форма глагола.</p></section>
+                        <section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Will</b> you work tomorrow?<br><b>Will</b> she come?</p><p><b>Will</b> ставится перед подлежащим.</p></section>
+                        <section class="note-block"><h4>Когда используем</h4><p>Спонтанное решение, обещание, предложение помощи, прогноз или ожидание.</p></section>
+                        <section class="note-block"><h4>Маркеры</h4><p>tomorrow, next week, soon, later, in the future, one day, I think</p></section>
+                    </div>
+                    <div class="note-example"><span>Examples</span><p>I will call you tomorrow, but I won't stay for long.</p><p class="note-example__translation">Я позвоню тебе завтра, но ненадолго.</p><p>Look at those clouds. I think it will rain.</p><p class="note-example__translation">Посмотри на эти облака. Думаю, пойдёт дождь.</p><p>Will you help me with this box?</p><p class="note-example__translation">Ты поможешь мне с этой коробкой?</p></div>
+                </article>
+                <article class="note" data-note-content="present-continuous" hidden>
+                    <p class="note__kicker">04 / PRESENT</p>
+                    <h3 class="note__title">Present Continuous</h3>
+                    <p class="note__lead">Действие происходит прямо сейчас, в текущий период или является временной договорённостью на будущее.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> действие сейчас в процессе. <i>I am eating now.</i> — Я сейчас ем.</p>
+                    <div class="note__text"><p>Present Continuous строится с помощью формы <b>to be</b> и глагола с окончанием <b>-ing</b>. В отличие от Present Simple, здесь важен процесс или временность ситуации: действие находится «в процессе».</p><p>С глаголами состояния — например, <b>know, like, understand, believe</b> — Continuous обычно не используется. В написании формы меняются по правилам: <b>make → making</b>, <b>run → running</b>, <b>lie → lying</b>.</p><p>Время может описывать не только секунду речи: <i>I am reading a book</i> значит, что книга сейчас находится в процессе чтения, даже если внимание в данный момент переключено на другое. Present Continuous также используется для раздражающих повторяющихся действий с <b>always</b>: <i>He is always losing his keys.</i></p></div>
+                    <div class="note__grid">
+                        <section class="note-block"><h4>Утверждение</h4><p class="formula">I <b>am working</b><br>he / she <b>is working</b><br>we / they <b>are working</b></p><p><b>Am / is / are</b> согласуется с подлежащим.</p></section>
+                        <section class="note-block"><h4>Отрицание</h4><p class="formula">I <b>am not working</b><br>She <b>isn't working</b><br>They <b>aren't working</b></p><p>Отрицание ставится после формы <b>to be</b>.</p></section>
+                        <section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Are</b> you working?<br><b>Is</b> he coming?</p><p>Форма <b>to be</b> ставится перед подлежащим.</p></section>
+                        <section class="note-block"><h4>Когда используем</h4><p>Прямо сейчас, временная ситуация, меняющийся процесс или договорённость на будущее.</p></section>
+                        <section class="note-block"><h4>Маркеры</h4><p>now, right now, at the moment, today, this week, currently, these days</p></section>
+                    </div>
+                    <div class="note-example"><span>Examples</span><p>I am writing an email right now.</p><p class="note-example__translation">Я прямо сейчас пишу электронное письмо.</p><p>She is staying with her friends this week.</p><p class="note-example__translation">На этой неделе она живёт у друзей.</p><p>Are you coming to the meeting tomorrow?</p><p class="note-example__translation">Ты придёшь на встречу завтра?</p></div>
+                </article>
+                <article class="note" data-note-content="past-continuous" hidden>
+                    <p class="note__kicker">05 / PAST</p>
+                    <h3 class="note__title">Past Continuous</h3>
+                    <p class="note__lead">Процесс, который шёл в конкретный момент в прошлом, часто когда другое событие его прервало.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> в прошлом действие было в процессе. <i>I was sleeping at ten.</i> — Я спал в десять.</p>
+                    <div class="note__text"><p>Past Continuous показывает действие в процессе в определённой точке прошлого: <i>At 8 p.m. yesterday, I was working.</i> Также он помогает описывать фон или два параллельных процесса в рассказе.</p><p>Для прерывания часто используется связка <b>while</b> + Past Continuous и <b>when</b> + Past Simple: <i>While I was driving, my phone rang.</i></p><p>Past Continuous создаёт «кадр» истории, а Past Simple сообщает событие: <i>It was raining when we left the office.</i> Для простого перечисления завершённых действий используется Past Simple.</p></div>
+                    <div class="note__grid">
+                        <section class="note-block"><h4>Утверждение</h4><p class="formula">I / he / she <b>was working</b><br>you / we / they <b>were working</b></p><p>Используем <b>was / were</b> и форму глагола с <b>-ing</b>.</p></section>
+                        <section class="note-block"><h4>Отрицание</h4><p class="formula">She <b>wasn't sleeping</b><br>They <b>weren't sleeping</b></p><p>Отрицание ставится после <b>was / were</b>.</p></section>
+                        <section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Was</b> he working?<br><b>Were</b> they waiting?</p><p><b>Was / were</b> ставится перед подлежащим.</p></section>
+                        <section class="note-block"><h4>Когда используем</h4><p>Действие в момент прошлого, фон рассказа, параллельные действия или прерванный процесс.</p></section>
+                        <section class="note-block"><h4>Маркеры</h4><p>at 5 p.m. yesterday, at that moment, while, when, all evening</p></section>
+                    </div>
+                    <div class="note-example"><span>Examples</span><p>I was cooking when you called me.</p><p class="note-example__translation">Я готовил, когда ты мне позвонил.</p><p>They were watching TV while we were having dinner.</p><p class="note-example__translation">Они смотрели телевизор, пока мы ужинали.</p><p>What were you doing at midnight?</p><p class="note-example__translation">Что ты делал в полночь?</p></div>
+                </article>
+                <article class="note" data-note-content="future-continuous" hidden>
+                    <p class="note__kicker">06 / FUTURE</p>
+                    <h3 class="note__title">Future Continuous</h3>
+                    <p class="note__lead">Действие будет находиться в процессе в определённый момент в будущем.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> в будущем действием уже будут заниматься. <i>I will be working at six.</i> — В шесть я буду работать.</p>
+                    <div class="note__text"><p>Future Continuous обозначает процесс, который будет идти в определённый момент будущего. Он подчёркивает длительность процесса, а не просто факт события.</p><p>Эта форма также используется в нейтральных вопросах о планах: <i>Will you be using the car tonight?</i> Вопрос уточняет ожидаемую ситуацию, а не звучит как прямая просьба.</p><p>Разница между формами: <i>I will work tomorrow</i> — факт или решение; <i>I will be working at 10 tomorrow</i> — процесс в конкретный момент. После <b>this time tomorrow</b> Future Continuous особенно естественен.</p></div>
+                    <div class="note__grid">
+                        <section class="note-block"><h4>Утверждение</h4><p class="formula">I / you / he / she <b>will be working</b></p><p>После <b>will</b> всегда идут <b>be</b> и глагол с <b>-ing</b>.</p></section>
+                        <section class="note-block"><h4>Отрицание</h4><p class="formula">I <b>won't be working</b><br>They <b>will not be waiting</b></p><p>Сокращение <b>won't</b> используется так же, как с Future Simple.</p></section>
+                        <section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Will</b> you be working tomorrow?<br><b>Will</b> she be sleeping?</p><p>Конструкция <b>will</b> ставится перед подлежащим.</p></section>
+                        <section class="note-block"><h4>Когда используем</h4><p>Процесс в конкретный момент будущего или вежливое уточнение чьих-то планов.</p></section>
+                        <section class="note-block"><h4>Маркеры</h4><p>this time tomorrow, at 8 p.m. tonight, next week, in the morning</p></section>
+                    </div>
+                    <div class="note-example"><span>Examples</span><p>This time tomorrow, I will be flying to London.</p><p class="note-example__translation">Завтра в это время я буду лететь в Лондон.</p><p>At 9 p.m. she will be studying for her exam.</p><p class="note-example__translation">В девять вечера она будет готовиться к экзамену.</p><p>Will you be using your laptop this evening?</p><p class="note-example__translation">Ты будешь пользоваться ноутбуком сегодня вечером?</p></div>
+                </article>
+                <article class="note" data-note-content="present-perfect" hidden>
+                    <p class="note__kicker">07 / PRESENT</p>
+                    <h3 class="note__title">Present Perfect</h3>
+                    <p class="note__lead">Прошлое действие связано с настоящим: важен результат, опыт или факт к текущему моменту.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> это уже произошло, и это важно сейчас. <i>I have lost my phone.</i> — Я потерял телефон (и сейчас его у меня нет).</p>
+                    <div class="note__text"><p>Present Perfect строится с <b>have / has</b> и третьей формой глагола. Точное завершённое время обычно не называется, потому что важны результат сейчас, жизненный опыт или период, который ещё не закончился.</p><p>Если указано конкретное завершённое время — например, <i>yesterday</i> или <i>in 2020</i> — нужен Past Simple, а не Present Perfect.</p><p>Главный смысл — связь с настоящим: <i>I have broken my glasses</i> значит, что очки сейчас сломаны. Опыт выражается вопросом <i>Have you ever...?</i>, а действие, начавшееся раньше и продолжающееся сейчас, часто описывается с <b>for / since</b>.</p></div>
+                    <div class="note__grid"><section class="note-block"><h4>Формула</h4><p class="formula">I / you / we <b>have finished</b><br>he / she / it <b>has finished</b></p><p>Третья форма: <b>worked</b>, <b>seen</b>, <b>gone</b>.</p></section><section class="note-block"><h4>Отрицание</h4><p class="formula">I <b>haven't finished</b><br>She <b>hasn't called</b></p><p>Отрицание ставится после <b>have / has</b>.</p></section><section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Have</b> you seen it?<br><b>Has</b> he arrived?</p><p>Вспомогательный глагол стоит перед подлежащим.</p></section><section class="note-block"><h4>Когда используем</h4><p>Результат сейчас, опыт, недавнее событие или незавершённый период.</p></section><section class="note-block"><h4>Маркеры</h4><p>ever, never, just, already, yet, recently, so far, today, this week</p></section></div>
+                    <div class="note-example"><span>Examples</span><p>I have lost my keys, so I can't open the door.</p><p class="note-example__translation">Я потерял ключи, поэтому не могу открыть дверь.</p><p>Have you ever worked in IT?</p><p class="note-example__translation">Ты когда-нибудь работал в IT?</p><p>She hasn't finished the report yet.</p><p class="note-example__translation">Она ещё не закончила отчёт.</p></div>
+                </article>
+                <article class="note" data-note-content="past-perfect" hidden>
+                    <p class="note__kicker">08 / PAST</p>
+                    <h3 class="note__title">Past Perfect</h3>
+                    <p class="note__lead">Действие произошло раньше другого момента или события в прошлом.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> одно прошлое случилось ещё раньше другого прошлого. <i>He had left before I came.</i> — Он ушёл до того, как я пришёл.</p>
+                    <div class="note__text"><p>Past Perfect помогает выстроить порядок событий в прошлом. Более раннее действие ставится в Past Perfect, а более позднее обычно — в Past Simple. Это «прошлое до прошлого».</p><p>Без Past Perfect порядок иногда понятен из слов <i>before</i> и <i>after</i>, но время делает последовательность особенно ясной в рассказах и объяснениях.</p><p>Past Perfect нужен не для любого далёкого прошлого, а именно для сравнения двух прошлых точек. <i>When I arrived, he left</i> может означать почти последовательные события, а <i>When I arrived, he had left</i> — он ушёл ещё раньше.</p></div>
+                    <div class="note__grid"><section class="note-block"><h4>Формула</h4><p class="formula">I / you / he / she <b>had left</b></p><p><b>Had</b> одинаков для всех лиц + третья форма глагола.</p></section><section class="note-block"><h4>Отрицание</h4><p class="formula">They <b>hadn't eaten</b><br>He <b>had not arrived</b></p><p>После <b>had</b> используется третья форма.</p></section><section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Had</b> you seen her before?<br><b>Had</b> they left?</p><p><b>Had</b> ставится перед подлежащим.</p></section><section class="note-block"><h4>Когда используем</h4><p>Чтобы показать, какое из двух прошлых событий произошло раньше.</p></section><section class="note-block"><h4>Маркеры</h4><p>before, after, by the time, already, just, never, until then</p></section></div>
+                    <div class="note-example"><span>Examples</span><p>When I arrived, the meeting had already started.</p><p class="note-example__translation">Когда я приехал, встреча уже началась.</p><p>She was tired because she hadn't slept well.</p><p class="note-example__translation">Она устала, потому что плохо спала.</p><p>Had you met him before the conference?</p><p class="note-example__translation">Ты встречал его до конференции?</p></div>
+                </article>
+                <article class="note" data-note-content="future-perfect" hidden>
+                    <p class="note__kicker">09 / FUTURE</p>
+                    <h3 class="note__title">Future Perfect</h3>
+                    <p class="note__lead">Действие будет завершено к определённому моменту в будущем.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> к будущему сроку результат уже будет готов. <i>I will have finished by Monday.</i> — К понедельнику я закончу.</p>
+                    <div class="note__text"><p>Future Perfect показывает результат, который будет готов к дедлайну или будущей точке отсчёта. Смысл можно передать так: «К этому моменту действие уже завершится».</p><p>После <b>will have</b> всегда используется третья форма глагола. В вопросах часто уточняется, успеет ли действие завершиться к сроку.</p><p>Слова <b>by</b> и <b>by the time</b> задают границу, к которой результат должен быть готов. Для длительности процесса до этой границы используется Future Perfect Continuous.</p></div>
+                    <div class="note__grid"><section class="note-block"><h4>Формула</h4><p class="formula">I / you / he / she<br><b>will have finished</b></p><p><b>Will have</b> одинаков для всех лиц.</p></section><section class="note-block"><h4>Отрицание</h4><p class="formula">She <b>won't have arrived</b><br>We <b>will not have finished</b></p><p>Отрицание ставится после <b>will</b>.</p></section><section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Will</b> you have finished by Friday?</p><p><b>By</b> обозначает крайний срок.</p></section><section class="note-block"><h4>Когда используем</h4><p>Завершение к дедлайну, прогноз результата и планирование сроков.</p></section><section class="note-block"><h4>Маркеры</h4><p>by tomorrow, by then, by the time, before, by next year</p></section></div>
+                    <div class="note-example"><span>Examples</span><p>By Friday, I will have finished the project.</p><p class="note-example__translation">К пятнице я закончу проект.</p><p>Will they have arrived by six o'clock?</p><p class="note-example__translation">Они приедут к шести часам?</p><p>She won't have completed the course by June.</p><p class="note-example__translation">Она не закончит курс к июню.</p></div>
+                </article>
+                <article class="note" data-note-content="present-perfect-continuous" hidden>
+                    <p class="note__kicker">10 / PRESENT</p>
+                    <h3 class="note__title">Present Perfect Continuous</h3>
+                    <p class="note__lead">Действие началось в прошлом и продолжается сейчас или только что закончилось, оставив заметный результат.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> действие длится уже какое-то время. <i>I have been waiting for ten minutes.</i> — Я жду уже десять минут.</p>
+                    <div class="note__text"><p>Present Perfect Continuous подчёркивает длительность и процесс. Он отвечает на вопрос «как долго?», а Present Perfect чаще подчёркивает готовый результат или количество.</p><p>С глаголами состояния обычно используется Present Perfect: <i>I have known her for years</i>, а не <i>have been knowing</i>.</p><p>Время может описывать действие, которое всё ещё идёт, или только что закончилось: <i>Your hands are dirty because you have been painting.</i> Разница видна в примерах: <i>I have painted three walls</i> — важен результат и количество; <i>I have been painting for three hours</i> — важен процесс.</p></div>
+                    <div class="note__grid"><section class="note-block"><h4>Формула</h4><p class="formula">I / you / we <b>have been working</b><br>he / she <b>has been working</b></p><p><b>Have / has been</b> + глагол с <b>-ing</b>.</p></section><section class="note-block"><h4>Отрицание</h4><p class="formula">I <b>haven't been sleeping</b><br>She <b>hasn't been feeling</b> well</p><p>Отрицание ставится после <b>have / has</b>.</p></section><section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Have</b> you been waiting long?</p><p>Часто вопрос содержит <b>how long</b>.</p></section><section class="note-block"><h4>Когда используем</h4><p>Длительность до настоящего, недавно завершённый процесс и видимый результат.</p></section><section class="note-block"><h4>Маркеры</h4><p>for, since, all day, lately, recently, how long</p></section></div>
+                    <div class="note-example"><span>Examples</span><p>She has been working here since 2022.</p><p class="note-example__translation">Она работает здесь с 2022 года.</p><p>Why are you tired? — I have been running.</p><p class="note-example__translation">Почему ты устал? — Я бегал.</p><p>How long have they been waiting?</p><p class="note-example__translation">Как долго они ждут?</p></div>
+                </article>
+                <article class="note" data-note-content="past-perfect-continuous" hidden>
+                    <p class="note__kicker">11 / PAST</p>
+                    <h3 class="note__title">Past Perfect Continuous</h3>
+                    <p class="note__lead">Процесс длился до определённого момента в прошлом и объясняет его фон или результат.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> в прошлом кто-то долго что-то делал до другого события. <i>She had been crying before I called.</i> — Она плакала до того, как я позвонил.</p>
+                    <div class="note__text"><p>Это время соединяет две идеи: действие продолжалось некоторое время и завершилось до другого события в прошлом. Часто оно объясняет причину состояния: человек устал, потому что долго работал.</p><p>Главный акцент — на продолжительности, а не на количестве сделанных действий.</p><p>Обычно рядом есть вторая прошедшая точка: <i>Before the meeting started, we had been waiting for an hour.</i> Для законченного результата, а не процесса используется Past Perfect: <i>We had completed the task before lunch.</i></p></div>
+                    <div class="note__grid"><section class="note-block"><h4>Формула</h4><p class="formula">I / you / he / she<br><b>had been working</b></p><p><b>Had been</b> одинаков для всех лиц.</p></section><section class="note-block"><h4>Отрицание</h4><p class="formula">They <b>hadn't been sleeping</b></p><p>Отрицание ставится после <b>had</b>.</p></section><section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Had</b> you been waiting long?</p><p>Вопросительная форма начинается с <b>had</b>.</p></section><section class="note-block"><h4>Когда используем</h4><p>Длительный процесс до другого прошлого события или причина прошлого состояния.</p></section><section class="note-block"><h4>Маркеры</h4><p>for, since, before, until then, how long, all day</p></section></div>
+                    <div class="note-example"><span>Examples</span><p>He was tired because he had been working all night.</p><p class="note-example__translation">Он устал, потому что работал всю ночь.</p><p>They had been living there for ten years before they moved.</p><p class="note-example__translation">Они прожили там десять лет, прежде чем переехали.</p><p>Had she been studying long before the exam?</p><p class="note-example__translation">Она долго готовилась до экзамена?</p></div>
+                </article>
+                <article class="note" data-note-content="future-perfect-continuous" hidden>
+                    <p class="note__kicker">12 / FUTURE</p>
+                    <h3 class="note__title">Future Perfect Continuous</h3>
+                    <p class="note__lead">К определённому моменту в будущем действие будет продолжаться уже некоторое время.</p>
+                    <p class="note__simple"><b>Проще говоря:</b> к будущему моменту действие будет длиться уже какое-то время. <i>By June, I will have been working here for a year.</i> — В июне будет год, как я здесь работаю.</p>
+                    <div class="note__text"><p>Future Perfect Continuous подчёркивает длительность процесса до будущей точки: «к этому моменту я буду делать это уже два часа». В обычной разговорной речи оно встречается реже, но полезно для сроков, прогнозов и описания будущего опыта.</p><p>Если важен сам завершённый результат, лучше Future Perfect. Если важна длительность — Future Perfect Continuous.</p><p>Это время часто используется с <b>for</b>: <i>By next month, she will have been learning English for a year.</i> Оно не утверждает, что действие закончится в этой точке — только показывает, сколько оно будет длиться к ней.</p></div>
+                    <div class="note__grid"><section class="note-block"><h4>Формула</h4><p class="formula">I / you / he / she<br><b>will have been working</b></p><p><b>Will have been</b> + глагол с <b>-ing</b>.</p></section><section class="note-block"><h4>Отрицание</h4><p class="formula">She <b>won't have been waiting</b></p><p>Отрицание ставится после <b>will</b>.</p></section><section class="note-block"><h4>Вопрос</h4><p class="formula"><b>Will</b> you have been working here for a year?</p><p>Обычно добавляется период длительности.</p></section><section class="note-block"><h4>Когда используем</h4><p>Длительность процесса до будущей даты или момента.</p></section><section class="note-block"><h4>Маркеры</h4><p>by then, by next year, for, since, by the time</p></section></div>
+                    <div class="note-example"><span>Examples</span><p>By July, I will have been working here for five years.</p><p class="note-example__translation">В июле будет пять лет, как я здесь работаю.</p><p>Will they have been travelling for a month by then?</p><p class="note-example__translation">К тому моменту они будут путешествовать уже месяц?</p><p>She won't have been studying English for long.</p><p class="note-example__translation">Она будет изучать английский недолго.</p></div>
+                </article>
+            </div>
+        </section>
+    </main>
+    <div class="toast" id="toast" role="status" aria-live="polite" aria-atomic="true">
+        <span class="toast__icon">✓</span>
+        <span id="toast-message">Промпт скопирован в clipboard</span>
+    </div>
+    <div class="resume-modal" id="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-title" hidden>
+        <div class="resume-modal__backdrop"></div>
+        <div class="resume-modal__card">
+            <p class="section-heading__kicker">SESSION FOUND</p>
+            <h2 class="resume-modal__title" id="resume-title">Продолжить тренировку?</h2>
+            <p class="resume-modal__text">Нашёл незавершённый набор вопросов. Можно вернуться к последнему предложению или выйти.</p>
+            <div class="resume-modal__actions">
+                <button class="button button--secondary" id="exit-session-button" type="button">Выйти</button>
+                <button class="button button--primary" id="resume-session-button" type="button">Продолжить <span>→</span></button>
+            </div>
+        </div>
+    </div>
+    <div class="resume-modal" id="complete-modal" role="dialog" aria-modal="true" aria-labelledby="complete-title" hidden>
+        <div class="resume-modal__backdrop"></div>
+        <div class="resume-modal__card">
+            <p class="section-heading__kicker">SESSION COMPLETE</p>
+            <h2 class="resume-modal__title" id="complete-title">Отлично, набор закончен!</h2>
+            <p class="resume-modal__text">Ты прошёл все карточки. Можно повторить этот набор или выйти к загрузке новых предложений.</p>
+            <div class="resume-modal__actions">
+                <button class="button button--secondary" id="complete-exit-button" type="button">Выйти</button>
+                <button class="button button--primary" id="complete-restart-button" type="button">Заново <span>↻</span></button>
+            </div>
+        </div>
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/choices.js/public/assets/scripts/choices.min.js"></script>
+    <script src="app.js"></script>
+</body>
+</html>
