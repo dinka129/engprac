@@ -349,7 +349,7 @@
         const utterance = new SpeechSynthesisUtterance(sentences[currentIndex].ru);
         utterance.lang = 'ru-RU';
         utterance.rate = 0.9;
-        utterance.volume = Math.min(1, Number(elements.volume.value) * 1.6);
+        utterance.volume = Math.min(1, Number(elements.volume.value) * 1.8);
         const russianVoice = speechSynthesis.getVoices().find((voice) => /^ru(-|_)/i.test(voice.lang));
         if (russianVoice) utterance.voice = russianVoice;
         elements.english.classList.add('sentence-card__prompt--speaking');
