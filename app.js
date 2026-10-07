@@ -8,6 +8,7 @@
         speech: document.querySelector('#speech-input'),
         voice: document.querySelector('#voice-select'),
         volume: document.querySelector('#speech-volume'),
+        setupVolume: document.querySelector('#setup-speech-volume'),
         trainerAuto: document.querySelector('#trainer-auto-input'),
         trainerSpeech: document.querySelector('#trainer-speech-input'),
         trainerVoice: document.querySelector('#trainer-voice-select'),
@@ -127,6 +128,11 @@
         document.body.classList.remove('modal-open');
     }
 
+    function openResumeModal() {
+        elements.resumeModal.showModal();
+        document.body.classList.add('modal-open');
+    }
+
     function getQuestionSession() {
         try {
             const stored = sessionStorage.getItem(questionStorageKey);
@@ -151,6 +157,7 @@
             elements.speech.checked = Boolean(state.speech);
             elements.voice.value = state.voice || '';
             elements.volume.value = Math.min(1, Math.max(0, Number(state.volume) || 0.2));
+            elements.setupVolume.value = elements.volume.value;
             elements.promptLevel.value = state.level || 'лёгкий';
             elements.promptCount.value = Math.min(250, Math.max(1, Number(state.count) || 100));
             elements.promptRepeat.checked = Boolean(state.repeat);
@@ -178,6 +185,7 @@
         elements.trainerSpeech.checked = elements.speech.checked;
         elements.trainerSpeed.value = elements.autoSpeed.value;
         elements.trainerVoice.value = elements.voice.value;
+        elements.setupVolume.value = elements.volume.value;
         updateTrainerControlState();
     }
 
@@ -186,6 +194,7 @@
         elements.speech.checked = elements.trainerSpeech.checked;
         elements.autoSpeed.value = elements.trainerSpeed.value;
         elements.voice.value = elements.trainerVoice.value;
+        elements.volume.value = elements.setupVolume.value;
         saveState();
         updateAutoSpeedState();
         updateTrainerControlState();
@@ -250,7 +259,14 @@
     elements.autoSpeed.addEventListener('input', () => { saveState(); syncPracticeControls(); });
     elements.speech.addEventListener('change', () => { saveState(); syncPracticeControls(); });
     elements.voice.addEventListener('change', () => { saveState(); syncPracticeControls(); });
-    elements.volume.addEventListener('input', saveState);
+    elements.volume.addEventListener('input', () => {
+        elements.setupVolume.value = elements.volume.value;
+        saveState();
+    });
+    elements.setupVolume.addEventListener('input', () => {
+        elements.volume.value = elements.setupVolume.value;
+        saveState();
+    });
     elements.trainerAuto.addEventListener('change', () => {
         syncSetupControls();
         isPaused = false;
@@ -307,7 +323,6 @@
         if (typeof answer !== 'string' && answer.alternative.trim()) {
             parts.push({ text: 'или', lang: 'ru-RU' }, { text: answer.alternative, lang: 'en-US' });
         }
-        elements.translation.classList.add('sentence-card__answer--speaking');
         const speakPart = (index) => {
             if (runId !== speechRunId || index >= parts.length) {
                 if (runId === speechRunId) {
@@ -349,7 +364,7 @@
         const utterance = new SpeechSynthesisUtterance(sentences[currentIndex].ru);
         utterance.lang = 'ru-RU';
         utterance.rate = 0.9;
-        utterance.volume = Math.min(1, Number(elements.volume.value) * 1.8);
+        utterance.volume = Math.min(1, Number(elements.volume.value) * 2);
         const russianVoice = speechSynthesis.getVoices().find((voice) => /^ru(-|_)/i.test(voice.lang));
         if (russianVoice) utterance.voice = russianVoice;
         elements.english.classList.add('sentence-card__prompt--speaking');
@@ -380,12 +395,15 @@
         const autoEnabled = elements.trainerAuto.checked;
         const speechEnabled = elements.trainerSpeech.checked;
         elements.trainerSpeed.disabled = !autoEnabled;
+        elements.pauseTraining.hidden = !autoEnabled;
         elements.pauseTraining.disabled = !autoEnabled;
         elements.trainerSpeed.parentElement.classList.toggle('trainer__speed-control--disabled', !autoEnabled);
         elements.trainerVoice.disabled = !speechEnabled;
         elements.volume.disabled = !speechEnabled;
+        elements.setupVolume.disabled = !speechEnabled;
         elements.trainerVoice.classList.toggle('trainer__voice-select--disabled', !speechEnabled);
         elements.volume.closest('.volume-field').classList.toggle('volume-field--disabled', !speechEnabled);
+        elements.setupVolume.closest('.volume-field').classList.toggle('volume-field--disabled', !speechEnabled);
     }
 
     function buildPrompt() {
@@ -507,8 +525,9 @@
         isPaused = false;
         elements.pauseTraining.textContent = 'Пауза';
         elements.pauseTraining.setAttribute('aria-pressed', 'false');
-        speechSynthesis.cancel();
         speechRunId += 1;
+        speechSynthesis.cancel();
+        speechSynthesis.resume();
         elements.english.classList.remove('sentence-card__prompt--speaking');
         elements.translation.classList.remove('sentence-card__answer--speaking');
         isTranslationVisible = false;
@@ -531,7 +550,7 @@
             elements.translation.append(separator, alternativeAnswer);
         }
         elements.translation.hidden = true;
-        elements.instruction.innerHTML = 'Нажми <kbd>→</kbd>, чтобы проверить перевод';
+        elements.instruction.innerHTML = 'Стрелка <kbd>→</kbd> — показать перевод';
         elements.nextLabel.textContent = 'Показать перевод';
         elements.previous.disabled = currentIndex === 0;
         elements.previous.style.opacity = currentIndex === 0 ? '.45' : '1';
@@ -608,13 +627,14 @@
     function advance() {
         speechRunId += 1;
         speechSynthesis.cancel();
+        speechSynthesis.resume();
         elements.english.classList.remove('sentence-card__prompt--speaking');
         elements.translation.classList.remove('sentence-card__answer--speaking');
         elements.translation.querySelectorAll('.speech-text--speaking').forEach((text) => text.classList.remove('speech-text--speaking'));
         if (!isTranslationVisible) {
             isTranslationVisible = true;
             elements.translation.hidden = false;
-            elements.instruction.textContent = currentIndex === sentences.length - 1 ? 'Набор закончен — нажми «Новый набор»' : 'Нажми →, чтобы перейти дальше';
+            elements.instruction.textContent = currentIndex === sentences.length - 1 ? 'Набор завершён — доступен новый набор' : 'Стрелка → — следующая карточка';
             elements.nextLabel.textContent = currentIndex === sentences.length - 1 ? 'Завершить' : 'Следующее';
             speakCurrentAnswer();
             saveQuestionSession();
@@ -646,10 +666,6 @@
     switchPage(initialPage === 'knowledge' ? 'knowledge' : 'practice', false);
     window.scrollTo(0, 0);
     const savedQuestionSession = getQuestionSession();
-    if (savedQuestionSession) {
-        elements.resumeModal.hidden = false;
-        document.body.classList.add('modal-open');
-    }
     elements.resumeSession.addEventListener('click', () => {
         const session = getQuestionSession();
         if (!session) return;
@@ -664,17 +680,17 @@
         if (session.isTranslationVisible) {
             isTranslationVisible = true;
             elements.translation.hidden = false;
-            elements.instruction.textContent = currentIndex === sentences.length - 1 ? 'Набор закончен — нажми «Новый набор»' : 'Нажми →, чтобы перейти дальше';
+            elements.instruction.textContent = currentIndex === sentences.length - 1 ? 'Набор завершён — доступен новый набор' : 'Стрелка → — следующая карточка';
             elements.nextLabel.textContent = currentIndex === sentences.length - 1 ? 'Завершить' : 'Следующее';
             speakCurrentAnswer();
             saveQuestionSession();
         }
-        elements.resumeModal.hidden = true;
+        elements.resumeModal.close();
         document.body.classList.remove('modal-open');
     });
     elements.exitSession.addEventListener('click', () => {
         clearQuestionSession();
-        elements.resumeModal.hidden = true;
+        elements.resumeModal.close();
         document.body.classList.remove('modal-open');
     });
     elements.completeRestart.addEventListener('click', () => {
@@ -697,6 +713,7 @@
         requestAnimationFrame(() => {
             document.body.classList.remove('is-loading');
             appLoader.classList.add('app-loader--hidden');
+            if (savedQuestionSession) openResumeModal();
         });
     }, 800);
     elements.next.addEventListener('click', advance);
@@ -720,9 +737,28 @@
             scheduleAutoAdvance();
         }
     });
-    elements.previous.addEventListener('click', () => {
-        if (currentIndex > 0) { currentIndex -= 1; render(); }
-    });
+    function goBack() {
+        if (isTranslationVisible) {
+            speechRunId += 1;
+            speechSynthesis.cancel();
+            elements.english.classList.remove('sentence-card__prompt--speaking');
+            elements.translation.querySelectorAll('.speech-text--speaking').forEach((text) => text.classList.remove('speech-text--speaking'));
+            isTranslationVisible = false;
+            elements.translation.hidden = true;
+            elements.instruction.innerHTML = 'Стрелка <kbd>→</kbd> — показать перевод';
+            elements.nextLabel.textContent = 'Показать перевод';
+            saveQuestionSession();
+            scheduleAutoAdvance();
+            speakCurrentPrompt();
+            return;
+        }
+        if (currentIndex > 0) {
+            currentIndex -= 1;
+            render();
+        }
+    }
+
+    elements.previous.addEventListener('click', goBack);
     elements.reset.addEventListener('click', () => {
         clearQuestionSession();
         clearTimeout(autoTimer);
@@ -758,6 +794,6 @@
             elements.pauseTraining.click();
         }
         if (event.key === 'ArrowRight' && !elements.trainer.hidden) advance();
-        if (event.key === 'ArrowLeft' && !elements.trainer.hidden && currentIndex > 0) { currentIndex -= 1; render(); }
+        if (event.key === 'ArrowLeft' && !elements.trainer.hidden) goBack();
     });
 })();

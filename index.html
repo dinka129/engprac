@@ -176,7 +176,7 @@
   }
 ]'></textarea>
             <div class="setup-panel__footer">
-                <p class="hint">Вставь массив объектов с ключами <code>en</code> и <code>ru</code>.</p>
+                <p class="hint">Формат: массив объектов с ключами <code>en</code> и <code>ru</code>.</p>
                 <div class="setup-panel__actions">
                     <label class="shuffle-toggle">
                         <input class="shuffle-toggle__input" id="shuffle-input" type="checkbox">
@@ -198,6 +198,10 @@
                         <select id="voice-select" aria-label="Английский голос">
                             <option value="">English voice</option>
                         </select>
+                    </label>
+                    <label class="volume-field volume-field--setup">
+                        <span>Громкость</span>
+                        <input id="setup-speech-volume" type="range" min="0" max="1" step="0.05" value="0.2" aria-label="Громкость озвучки">
                     </label>
                     <label class="speed-field" id="speed-field">
                         <span class="speed-field__label">Скорость</span>
@@ -223,9 +227,9 @@
                     </label>
                 </div>
                 <div class="trainer__meta-actions">
-                    <button class="button button--ghost" id="pause-training-button" type="button" aria-pressed="false">Пауза</button>
-                    <button class="button button--ghost" id="exit-training-button" type="button">Выйти</button>
-                    <button class="button button--ghost" id="reset-button" type="button">Новый набор <span>↗</span></button>
+                    <button class="button button--ghost button--pause" id="pause-training-button" type="button" aria-pressed="false">Пауза</button>
+                    <button class="button button--ghost button--exit" id="exit-training-button" type="button">Выйти</button>
+                    <button class="button button--ghost button--reset" id="reset-button" type="button">Новый набор <span>↗</span></button>
                 </div>
             </div>
             <article class="sentence-card">
@@ -236,7 +240,7 @@
                 <h2 class="sentence-card__prompt" id="sentence-title"></h2>
                 <p class="sentence-card__answer" id="translation" hidden></p>
                 <div class="sentence-card__line"></div>
-                <p class="sentence-card__instruction" id="instruction">Нажми <kbd>→</kbd>, чтобы проверить перевод</p>
+                <p class="sentence-card__instruction" id="instruction">Стрелка <kbd>→</kbd> — показать перевод</p>
             </article>
             <div class="trainer__controls">
                 <button class="button button--secondary" id="previous-button" type="button" aria-label="Предыдущее предложение">← Назад</button>
@@ -428,24 +432,23 @@
         <span class="toast__icon">✓</span>
         <span id="toast-message">Промпт скопирован в clipboard</span>
     </div>
-    <div class="resume-modal" id="resume-modal" role="dialog" aria-modal="true" aria-labelledby="resume-title" hidden>
-        <div class="resume-modal__backdrop"></div>
+    <dialog class="resume-modal" id="resume-modal" aria-labelledby="resume-title">
         <div class="resume-modal__card">
             <p class="section-heading__kicker">SESSION FOUND</p>
             <h2 class="resume-modal__title" id="resume-title">Продолжить тренировку?</h2>
-            <p class="resume-modal__text">Нашёл незавершённый набор вопросов. Можно вернуться к последнему предложению или выйти.</p>
+            <p class="resume-modal__text">Обнаружен незавершённый набор. Продолжить с последнего предложения или выйти?</p>
             <div class="resume-modal__actions">
                 <button class="button button--secondary" id="exit-session-button" type="button">Выйти</button>
-                <button class="button button--primary" id="resume-session-button" type="button">Продолжить <span>→</span></button>
+                <button class="button button--primary" id="resume-session-button" type="button" autofocus>Продолжить <span>→</span></button>
             </div>
         </div>
-    </div>
+    </dialog>
     <div class="resume-modal" id="complete-modal" role="dialog" aria-modal="true" aria-labelledby="complete-title" hidden>
         <div class="resume-modal__backdrop"></div>
         <div class="resume-modal__card">
             <p class="section-heading__kicker">SESSION COMPLETE</p>
-            <h2 class="resume-modal__title" id="complete-title">Отлично, набор закончен!</h2>
-            <p class="resume-modal__text">Ты прошёл все карточки. Можно повторить этот набор или выйти к загрузке новых предложений.</p>
+            <h2 class="resume-modal__title" id="complete-title">Набор завершён</h2>
+            <p class="resume-modal__text">Все карточки пройдены. Повторить набор или вернуться к загрузке новых предложений?</p>
             <div class="resume-modal__actions">
                 <button class="button button--secondary" id="complete-exit-button" type="button">Выйти</button>
                 <button class="button button--primary" id="complete-restart-button" type="button">Заново <span>↻</span></button>

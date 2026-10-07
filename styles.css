@@ -135,6 +135,10 @@ code { color: var(--accent); }
 .button--secondary { border: 1px solid var(--line); background: transparent; color: var(--muted); }
 .button--secondary:hover, .button--ghost:hover { color: var(--text); background: var(--panel-soft); }
 .button--ghost { padding: 8px 15px; background: transparent; color: var(--muted); }
+.button--pause { color: #75c6e4; background: rgba(117, 228, 193, 0.1); }
+.button--pause:hover { color: #8aebf2; background: rgba(117, 206, 228, 0.18); }
+.button--exit { color: #ff8e8e; background: rgba(229,139,139,.1); }
+.button--exit:hover { color: #f0a1a1; background: rgba(229,139,139,.18); }
 .button--next { min-width: 185px; }
 .error-message { margin: 14px 0 0; color: var(--danger); font-size: 13px; }
 .sentence-card { position: relative; min-height: 390px; margin-top: 26px; padding: clamp(32px, 8vw, 92px) clamp(24px, 8vw, 96px); display: flex; flex-direction: column; justify-content: center; border: 1px solid var(--line); border-radius: 18px; background: radial-gradient(circle at 100% 0%, rgba(215,243,106,.06), transparent 35%), var(--panel); overflow: hidden; }
@@ -163,7 +167,12 @@ kbd { padding: 3px 7px; border: 1px solid #484c56; border-bottom-width: 2px; bor
 .toast { position: fixed; z-index: 10; right: 24px; bottom: 24px; display: flex; align-items: center; gap: 10px; max-width: calc(100% - 48px); padding: 13px 16px; border: 1px solid #53632b; border-radius: 10px; background: #242b1d; color: var(--text); box-shadow: 0 12px 35px rgba(0,0,0,.35); font-size: 13px; opacity: 0; pointer-events: none; transform: translateY(18px); transition: opacity .25s ease, transform .25s ease; }
 .toast--visible { opacity: 1; transform: translateY(0); }
 .toast__icon { display: grid; width: 19px; height: 19px; place-items: center; border-radius: 50%; background: var(--accent); color: var(--accent-ink); font-size: 12px; font-weight: 900; }
-.resume-modal { position: fixed; z-index: 90; inset: 0; display: grid; place-items: center; padding: 20px; }
+div.resume-modal { position: fixed; z-index: 90; inset: 0; display: grid; place-items: center; padding: 20px; }
+dialog.resume-modal { width: min(calc(100% - 40px), 470px); padding: 0; border: 0; background: transparent; color: var(--text); }
+dialog.resume-modal[open] { animation: resume-modal-in .25s ease-out both; }
+dialog.resume-modal::backdrop { background: rgba(8,9,11,.72); backdrop-filter: blur(7px); animation: resume-backdrop-in .2s ease-out both; }
+@keyframes resume-modal-in { from { opacity: 0; transform: translateY(10px) scale(.98); } to { opacity: 1; transform: translateY(0) scale(1); } }
+@keyframes resume-backdrop-in { from { opacity: 0; } to { opacity: 1; } }
 .resume-modal__backdrop { position: absolute; inset: 0; background: rgba(8,9,11,.72); backdrop-filter: blur(7px); }
 .resume-modal__card { position: relative; width: min(100%, 430px); padding: 30px; border: 1px solid var(--line); border-radius: 15px; background: var(--panel); box-shadow: 0 22px 70px rgba(0,0,0,.45); }
 .resume-modal__title { margin: 0; font-size: 28px; letter-spacing: -.045em; }
